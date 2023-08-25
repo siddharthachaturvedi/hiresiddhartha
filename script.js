@@ -4,6 +4,10 @@ function startChat() {
   document.getElementById('chat-container').style.flexDirection = 'column';
 }
 
+document.getElementById("start-chat-button").addEventListener("click", function() {
+  document.getElementById("chat-container").classList.remove("hidden");
+});
+
 async function sendMessage() {
   const input = document.getElementById('input-text').value;
   const chatWindow = document.getElementById('chat-window');
