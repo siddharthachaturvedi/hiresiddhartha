@@ -1,3 +1,4 @@
+/* Base styling for the body */
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
@@ -9,6 +10,7 @@ body {
   padding: 20px;
 }
 
+/* Page Title Styling */
 #page-title {
   text-align: center;
   font-size: 32px;
@@ -17,21 +19,24 @@ body {
   font-weight: bold;
 }
 
+/* Introduction Container */
 #introduction-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Full viewport height */
+  height: auto; /* Adjusted to adapt to content size */
   text-align: center;
-  opacity: 1; /* Initially visible */
+  opacity: 1;
 }
 
+/* Animation for text fade-in effect */
 .animate-text {
   animation: fadeInUp 1s ease forwards;
   opacity: 0;
 }
 
+/* Start Chat and Send Button Styling */
 #start-chat-button,
 #send-button {
   padding: 10px 20px;
@@ -43,14 +48,22 @@ body {
   transition: background-color 0.3s ease;
 }
 
+/* Hover effect for Start Chat and Send Button */
 #start-chat-button:hover,
 #send-button:hover {
   background-color: #007A3C;
 }
 
+/* Keyframes for text animation */
 @keyframes fadeInUp {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Chat Container Styling */
+/* Initially hide the chat container */
+#chat-container.hidden {
+  display: none;
 }
 
 #chat-container {
@@ -66,6 +79,7 @@ body {
   overflow: hidden;
 }
 
+/* Chat Window Styling */
 #chat-window {
   flex-grow: 1;
   overflow-y: auto;
@@ -75,12 +89,14 @@ body {
   word-wrap: break-word;
 }
 
+/* Input Container Styling */
 #input-container {
   display: flex;
   justify-content: space-between;
   border-top: 1px solid #ccc;
 }
 
+/* Input Text Field Styling */
 #input-text {
   width: 80%;
   padding: 10px;
@@ -89,13 +105,13 @@ body {
   resize: none;
 }
 
-/* Media Query for Responsiveness */
+/* Media Query for Mobile Responsiveness */
 @media (max-width: 600px) {
   #input-text { width: 70%; }
   #send-button { width: 28%; }
 }
 
-/* Message styling */
+/* Message Styling */
 .user-message,
 .response-message {
   padding: 10px;
@@ -108,7 +124,7 @@ body {
 .user-message { background-color: #b8e6b8; align-self: flex-end; }
 .response-message { background-color: #d2d2d2; align-self: flex-start; }
 
-/* Typing Animation */
+/* Typing Animation Styling */
 .typing-animation {
   padding: 10px;
   font-style: italic;
@@ -131,7 +147,7 @@ body {
   100% { content: '.'; }
 }
 
-/* Footer */
+/* Footer Styling */
 footer {
   text-align: center;
   font-size: 12px;
@@ -139,4 +155,12 @@ footer {
   background-color: #f5f5f5;
   padding: 5px;
   margin-top: 10px;
+}
+
+.footer-link {
+  font-weight: 600;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
 }
