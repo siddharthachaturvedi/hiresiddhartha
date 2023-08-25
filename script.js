@@ -1,14 +1,17 @@
-
 function startChat() {
   document.getElementById('introduction-container').style.display = 'none';
   document.getElementById('chat-container').style.display = 'flex';
-  document.getElementById('chat-container').style.flexDirection = 'column'; // Ensure that the container is flex column
+  document.getElementById('chat-container').style.flexDirection = 'column';
 }
-
 
 async function sendMessage() {
   const input = document.getElementById('input-text').value;
   const chatWindow = document.getElementById('chat-window');
+  const url = 'https://hiresiddhartha.azurewebsites.net/api/message';
+  const key = 'XJez5tp6Z9Pcm12-Vz_ev275gDkaWUGevD3Rzamg_k8KAzFuTFJWDg==';
+  const headers = new Headers();
+  headers.append('x-functions-key', key);
+  headers.append('Content-Type', 'application/json');
 
   // Append user's message
   const userDiv = document.createElement('div');
@@ -22,32 +25,50 @@ async function sendMessage() {
   // Adding typing animation
   const typingDiv = document.createElement('div');
   typingDiv.className = 'typing-animation';
-  chatWindow.appendChild(typingDiv);
+  const appendedTypingDiv = chatWindow.appendChild(typingDiv); // Keep a reference to the appended node
 
-  const response = await fetch('https://hiresiddhartha.azurewebsites.net/api/message', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content: input }),
-  });
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({ content: input }),
+    });
 
-  // Remove typing animation
-  chatWindow.removeChild(typingDiv);
+    if (!response.ok) {
+      let errorText = await response.text();
+      errorText = errorText ? ` - ${errorText}` : '';
+      throw new Error(`Oops: ${response.status} ${response.statusText}${errorText}`);
+    }
 
-  const result = await response.json();
+    // Remove typing animation
+    chatWindow.removeChild(appendedTypingDiv);
 
-  // Append bot response message
-  const responseDiv = document.createElement('div');
-  responseDiv.className = 'response-message'; // Changed from 'bot-message'
+    const result = await response.json();
+    const responseDiv = document.createElement('div');
+    responseDiv.className = 'response-message';
 
-  // Split response text by line breaks and append as separate paragraphs
-  const lines = result.message.content.split('\n');
-  lines.forEach(line => {
-    const paragraph = document.createElement('p');
-    paragraph.textContent = line;
-    responseDiv.appendChild(paragraph);
-  });
+    // Extract the message content
+    const messageContent = result.message;
 
-  chatWindow.appendChild(responseDiv);
+    // Split response text by line breaks and append as separate paragraphs
+    const lines = messageContent.split('\n');
+    lines.forEach(line => {
+      const paragraph = document.createElement('p');
+      paragraph.textContent = line;
+      responseDiv.appendChild(paragraph);
+    });
+
+    chatWindow.appendChild(responseDiv);
+  } catch (error) {
+    // Remove typing animation in case of error
+    chatWindow.removeChild(appendedTypingDiv);
+
+    // Append error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = `Error: ${error.message}`;
+    chatWindow.appendChild(errorDiv);
+  }
 }
 
 // Event listener to send message with the Enter key
