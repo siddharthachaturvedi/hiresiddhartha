@@ -37,8 +37,7 @@ body {
 }
 
 /* Start Chat and Send Button Styling */
-#start-chat-button,
-#send-button {
+#start-chat-button{
   padding: 10px 20px;
   cursor: pointer;
   background-color: #00A652;
@@ -48,9 +47,29 @@ body {
   transition: background-color 0.3s ease;
 }
 
+/* Send Button */
+#send-button {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 10px 20px;
+  cursor: not-allowed;
+  background-color: grey;
+  border: none;
+  color: white;
+  font-weight: bold;
+}
+#send-button.enabled {
+  cursor: pointer;
+  background-color: #00A652;
+}
+
+#send-button.enabled:hover {
+  background-color: #007A3C;
+}
+
 /* Hover effect for Start Chat and Send Button */
-#start-chat-button:hover,
-#send-button:hover {
+#start-chat-button:hover {
   background-color: #007A3C;
 }
 
@@ -91,6 +110,7 @@ body {
 
 /* Input Container Styling */
 #input-container {
+  position: relative;
   display: flex;
   justify-content: space-between;
   border-top: 1px solid #ccc;
@@ -98,11 +118,13 @@ body {
 
 /* Input Text Field Styling */
 #input-text {
-  width: 80%;
+  width: 100%;
   padding: 10px;
+  padding-right: 50px; /* Create space for send button */
   border: none;
   outline: none;
   resize: none;
+  word-wrap: break-word;
 }
 
 /* Media Query for Mobile Responsiveness */
