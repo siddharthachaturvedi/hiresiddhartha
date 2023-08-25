@@ -2,6 +2,7 @@ function startChat() {
   document.getElementById('introduction-container').style.display = 'none';
   document.getElementById('chat-container').style.display = 'flex';
   document.getElementById('chat-container').style.flexDirection = 'column';
+  document.getElementById('send-button').disabled = true;  // Add this line for greying out the send button
 }
 
 document.getElementById("start-chat-button").addEventListener("click", function() {
@@ -25,6 +26,12 @@ async function sendMessage() {
 
   // Clear input field
   document.getElementById('input-text').value = '';
+
+    // Disable the 'Send' button again because the text box is empty
+    const sendButton = document.getElementById('send-button');
+    sendButton.disabled = true;
+    sendButton.classList.remove('enabled');
+    sendButton.style.cursor = 'not-allowed';
 
   // Adding typing animation
   const typingDiv = document.createElement('div');
@@ -80,5 +87,25 @@ document.getElementById('input-text').addEventListener('keydown', function (e) {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
     sendMessage();
+  }
+});
+
+// New event listener to handle 'Send' button click
+document.getElementById('send-button').addEventListener('click', function() {
+  if (!this.disabled) {
+    sendMessage();
+  }
+});
+
+document.getElementById('input-text').addEventListener('input', function() {
+  const sendButton = document.getElementById('send-button');
+  if (this.value.trim() === '') {
+      sendButton.disabled = true;
+      sendButton.classList.remove('enabled');
+      sendButton.style.cursor = 'not-allowed';
+  } else {
+      sendButton.disabled = false;
+      sendButton.classList.add('enabled');
+      sendButton.style.cursor = 'pointer';
   }
 });
