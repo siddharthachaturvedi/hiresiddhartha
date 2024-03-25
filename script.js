@@ -2,7 +2,7 @@ function startChat() {
   document.getElementById('introduction-container').style.display = 'none';
   document.getElementById('chat-container').style.display = 'flex';
   document.getElementById('chat-container').style.flexDirection = 'column';
-  document.getElementById('send-button').disabled = true;  // Add this line for greying out the send button
+  document.getElementById('send-button').disabled = true; // Add this line for greying out the send button
 }
 
 document.getElementById("start-chat-button").addEventListener("click", function() {
@@ -27,16 +27,16 @@ async function sendMessage() {
   // Clear input field
   document.getElementById('input-text').value = '';
 
-    // Disable the 'Send' button again because the text box is empty
-    const sendButton = document.getElementById('send-button');
-    sendButton.disabled = true;
-    sendButton.classList.remove('enabled');
-    sendButton.style.cursor = 'not-allowed';
+  // Disable the 'Send' button again because the text box is empty
+  const sendButton = document.getElementById('send-button');
+  sendButton.disabled = true;
+  sendButton.classList.remove('enabled');
+  sendButton.style.cursor = 'not-allowed';
 
   // Adding typing animation
   const typingDiv = document.createElement('div');
   typingDiv.className = 'typing-animation';
-  const appendedTypingDiv = chatWindow.appendChild(typingDiv); // Keep a reference to the appended node
+  chatWindow.appendChild(typingDiv);
 
   try {
     const response = await fetch(url, {
@@ -45,35 +45,23 @@ async function sendMessage() {
       body: JSON.stringify({ content: input }),
     });
 
+    // Remove typing animation
+    chatWindow.removeChild(typingDiv);
+
     if (!response.ok) {
       let errorText = await response.text();
       errorText = errorText ? ` - ${errorText}` : '';
       throw new Error(`Oops: ${response.status} ${response.statusText}${errorText}`);
     }
 
-    // Remove typing animation
-    chatWindow.removeChild(appendedTypingDiv);
-
     const result = await response.json();
     const responseDiv = document.createElement('div');
     responseDiv.className = 'response-message';
 
-    // Extract the message content
-    const messageContent = result.message;
-
-    // Split response text by line breaks and append as separate paragraphs
-    const lines = messageContent.split('\n');
-    lines.forEach(line => {
-      const paragraph = document.createElement('p');
-      paragraph.textContent = line;
-      responseDiv.appendChild(paragraph);
-    });
-
+    // Convert Markdown to HTML and set as innerHTML
+    responseDiv.innerHTML = marked(result.message);
     chatWindow.appendChild(responseDiv);
   } catch (error) {
-    // Remove typing animation in case of error
-    chatWindow.removeChild(appendedTypingDiv);
-
     // Append error message
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
@@ -97,15 +85,16 @@ document.getElementById('send-button').addEventListener('click', function() {
   }
 });
 
+// Event listener for input field to toggle send button enable/disable
 document.getElementById('input-text').addEventListener('input', function() {
   const sendButton = document.getElementById('send-button');
   if (this.value.trim() === '') {
-      sendButton.disabled = true;
-      sendButton.classList.remove('enabled');
-      sendButton.style.cursor = 'not-allowed';
+    sendButton.disabled = true;
+    sendButton.classList.remove('enabled');
+    sendButton.style.cursor = 'not-allowed';
   } else {
-      sendButton.disabled = false;
-      sendButton.classList.add('enabled');
-      sendButton.style.cursor = 'pointer';
+    sendButton.disabled = false;
+    sendButton.classList.add('enabled');
+    sendButton.style.cursor = 'pointer';
   }
 });
