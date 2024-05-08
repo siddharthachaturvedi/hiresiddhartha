@@ -344,16 +344,16 @@ section h2 {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 100%;
-    margin-bottom: 8px; /* Smaller gap between tooltip and skill */
+    bottom: 110%; /* Move tooltip higher above the skill */
+    margin-bottom: 10px; /* Larger gap between tooltip and skill */
     background: #444; /* Softer gray color */
     color: #f9f9f9; /* Lighter text color */
-    padding: 5px 8px; /* Adjusted padding for the tooltip */
-    border-radius: 5px; /* Rounded corners */
+    padding: 4px 6px; /* Smaller padding */
+    border-radius: 4px; /* Rounded corners */
     white-space: normal;
-    max-width: 220px; /* Adjusted width */
+    max-width: 250px; /* Smaller tooltip width */
     z-index: 999;
-    font-size: 0.85em; /* Smaller font size */
+    font-size: 0.55em; /* Smaller font size */
     font-weight: normal;
     opacity: 0;
     visibility: hidden;
