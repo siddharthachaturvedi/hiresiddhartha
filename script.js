@@ -15,35 +15,31 @@ document.addEventListener('DOMContentLoaded', function () {
         burger.classList.toggle('active');
     });
 
-    // Typewriter Effect
-    const roles = ['Eternal Student', 'Tech Tinkerer', 'Empirical Learner'];
-    let currentTextIndex = 0;
-    let currentLetterIndex = 0;
-    const dynamicTextElem = document.getElementById('dynamic-text');
+    // Typewriter Effect for Hero Text
+    const texts = ["Tech Tinkerer", "Eternal Student", "Empirical Learner"];
+    let count = 0;
+    let index = 0;
+    let currentText = "";
+    let letter = "";
 
-    function typewriterEffect() {
-        if (currentTextIndex === roles.length) currentTextIndex = 0;
-        const currentText = roles[currentTextIndex];
-        dynamicTextElem.textContent = currentText.slice(0, ++currentLetterIndex);
-        if (currentLetterIndex === currentText.length) {
-            setTimeout(eraseEffect, 2000);
+    function type() {
+        if (count === texts.length) {
+            count = 0;
+        }
+        currentText = texts[count];
+        letter = currentText.slice(0, ++index);
+
+        document.getElementById('dynamic-text').textContent = letter;
+        if (letter.length === currentText.length) {
+            count++;
+            index = 0;
+            setTimeout(type, 2000); // Delay before starting next text
         } else {
-            setTimeout(typewriterEffect, 120);
+            setTimeout(type, 150); // Speed of typing effect
         }
     }
 
-    function eraseEffect() {
-        const currentText = roles[currentTextIndex];
-        dynamicTextElem.textContent = currentText.slice(0, --currentLetterIndex);
-        if (currentLetterIndex === 0) {
-            currentTextIndex++;
-            setTimeout(typewriterEffect, 500);
-        } else {
-            setTimeout(eraseEffect, 60);
-        }
-    }
-
-    typewriterEffect(); // Start the typewriter effect
+    type(); // Start the typewriter effect
 
     // Scroll-to-Top Button
     const scrollTopBtn = document.querySelector('.scroll-top');
@@ -56,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-     // Smooth scrolling for navigation links and scroll button
-     document.querySelectorAll('.nav-links a, .scroll-down').forEach(link => {
+    // Smooth scrolling for navigation links and scroll button
+    document.querySelectorAll('.nav-links a, .scroll-down').forEach(link => {
         link.addEventListener('click', e => {
             e.preventDefault();
             const targetId = link.getAttribute('href');
@@ -69,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// Chat functionality
 function startChat() {
     const introContainer = document.getElementById('introduction-container');
     const chatContainer = document.getElementById('chat-container');
@@ -80,12 +77,7 @@ function startChat() {
 async function sendMessage() {
     const input = document.getElementById('input-text').value;
     const chatWindow = document.getElementById('chat-window');
-    const url = 'https://hiresiddhartha.azurewebsites.net/api/message';
-    const key = 'XJez5tp6Z9Pcm12-Vz_ev275gDkaWUGevD3Rzamg_k8KAzFuTFJWDg==';
-    const headers = new Headers({
-        'x-functions-key': key,
-        'Content-Type': 'application/json'
-    });
+    const url = 'https://hiresiddhartha.azurewebsites.net/api/message?code=fJNFB37wyqjoK_asybYDptvMtOgtcov3NfPFXZ5evqziAzFumzp7NA%3D%3D'; // Replace with your function URL
 
     // Add user's message
     const userDiv = document.createElement('div');
@@ -109,7 +101,9 @@ async function sendMessage() {
     try {
         const response = await fetch(url, {
             method: 'POST',
-            headers,
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({ content: input })
         });
 
