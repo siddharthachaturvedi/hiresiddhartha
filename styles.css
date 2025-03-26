@@ -419,25 +419,6 @@ header.scrolled {
     transform: translateY(-2px);
 }
 
-.message {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    border-radius: 8px;
-    max-width: 80%;
-}
-
-.user-message {
-    background: var(--secondary);
-    color: var(--text-light);
-    margin-left: auto;
-}
-
-.assistant-message {
-    background: var(--dark);
-    color: var(--text-light);
-    margin-right: auto;
-}
-
 /* Sections */
 .section {
     padding: var(--space-12) 0;
@@ -497,7 +478,6 @@ header.scrolled {
 
 .content-column h2 {
     font-size: var(--font-size-2xl);
-    margin-bottom: var(--space-4);
     color: var(--dark);
     position: relative;
     display: inline-block;
@@ -640,7 +620,7 @@ header.scrolled {
 #interweb a:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateX(10px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var (--shadow-md);
     border-color: var(--secondary);
 }
 
@@ -1112,7 +1092,7 @@ footer {
 /* Content section divider lines */
 .section-divider {
     height: 3px;
-    background: linear-gradient(90deg, var(--background) 0%, var(--secondary) 50%, var(--background) 100%);
+    background: linear-gradient(90deg, var(--background) 0%, var(--secondary) 50%, var (--background) 100%);
     margin: 0 auto;
     width: 80%;
     opacity: 0.3;
@@ -1156,27 +1136,81 @@ footer {
     }
 }
 
-/* Message Styles */
+/* Message and Typing Indicator Styles */
 .message {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    max-width: 80%;
     opacity: 0;
-    animation: fadeIn 0.3s ease-out forwards;
+    transform: translateY(10px);
+    animation: messageSlideIn 0.3s ease-out forwards;
+    position: relative;
 }
 
-@keyframes fadeIn {
-    from {
+.user-message {
+    background: var(--secondary);
+    color: var(--text-light);
+    margin-left: auto;
+    transform-origin: right;
+}
+
+.assistant-message {
+    background: var(--dark);
+    color: var(--text-light);
+    margin-right: auto;
+    transform-origin: left;
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--dark);
+    border-radius: 8px;
+    max-width: 80px;
+    margin-right: auto;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--light);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: typingPulse 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingPulse {
+    0%, 100% {
+        transform: scale(0.7);
+        opacity: 0.4;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes messageSlideIn {
+    0% {
         opacity: 0;
         transform: translateY(10px);
     }
-    to {
+    100% {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Loading State */
-.message.loading {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(4px);
 }
 
 /* Accessibility - Replace deprecated -ms-high-contrast */

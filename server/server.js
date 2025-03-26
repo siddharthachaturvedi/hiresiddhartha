@@ -37,7 +37,29 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Start server
-app.listen(config.port, () => {
-    console.log(`Server running on port ${config.port}`);
-});
+// Start server with port fallback
+const startServer = async (port) => {
+    try {
+        await new Promise((resolve, reject) => {
+            const server = app.listen(port, () => {
+                console.log(`Server running on port ${port}`);
+                resolve();
+            });
+
+            server.on('error', (err) => {
+                if (err.code === 'EADDRINUSE') {
+                    console.log(`Port ${port} is busy, trying ${port + 1}...`);
+                    server.close();
+                    startServer(port + 1);
+                } else {
+                    reject(new Error(`Failed to start server: ${err.message}`));
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Failed to start server:', error);
+        process.exit(1);
+    }
+};
+
+startServer(config.port);

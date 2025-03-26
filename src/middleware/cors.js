@@ -1,16 +1,24 @@
-const cors = require('cors');
-const { config } = require('../config/config');
+import cors from 'cors';
+import { config } from '../config/config.js';
 
-const corsMiddleware = cors({
+const corsOptions = {
     origin: function(origin, callback) {
-        if (!origin || config.allowedOrigins.indexOf(origin) !== -1) {
+        // Allow requests with no origin (like mobile apps, curl, etc)
+        if (!origin) {
+            return callback(null, true);
+        }
+        
+        const allowedOrigins = config.allowedOrigins;
+        if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
         }
     },
-    methods: ['GET', 'POST'],
-    credentials: true
-});
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    maxAge: 86400 // 24 hours
+};
 
-module.exports = corsMiddleware;
+export const corsMiddleware = cors(corsOptions);
