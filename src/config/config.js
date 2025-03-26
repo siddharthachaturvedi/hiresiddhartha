@@ -6,7 +6,9 @@ dotenv.config();
 
 export const config = {
     port: process.env.PORT || 3000,
-    allowedOrigins: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000'],
+    allowedOrigins: process.env.ALLOWED_ORIGINS ? 
+        process.env.ALLOWED_ORIGINS.split(',') : 
+        ['http://localhost:3000', 'https://sidc.ai', 'https://www.sidc.ai'],
     azure: {
         endpoint: process.env.AZURE_OPENAI_ENDPOINT,
         apiKey: process.env.AZURE_OPENAI_API_KEY,

@@ -1178,3 +1178,11 @@ footer {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(4px);
 }
+
+/* Accessibility - Replace deprecated -ms-high-contrast */
+@media (forced-colors: active) {
+    /* Add forced color mode styles here */
+    .button, .nav-links a, .footer-link {
+        forced-color-adjust: none;
+    }
+}

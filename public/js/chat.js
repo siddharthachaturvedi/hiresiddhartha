@@ -84,6 +84,15 @@ class ChatUI {
                 body: JSON.stringify({ message })
             });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new TypeError("Response was not JSON");
+            }
+
             const data = await response.json();
             
             this.hideTypingIndicator();
@@ -96,7 +105,7 @@ class ChatUI {
         } catch (error) {
             console.error('Error:', error);
             this.hideTypingIndicator();
-            this.appendMessage('Sorry, there was an error connecting to the server.');
+            this.appendMessage('Sorry, there was an error connecting to the server. Please try again later.');
         }
     }
 }
