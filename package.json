@@ -1,0 +1,25 @@
+{
+  "name": "hiresiddhartha",
+  "version": "1.0.0",
+  "main": "server/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --no-deprecation server/server.js",
+    "dev": "nodemon --no-deprecation server/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "AI Chat Application",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.17.1",
+    "@azure/openai": "^1.0.0-beta.11",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "openai": "^4.89.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
