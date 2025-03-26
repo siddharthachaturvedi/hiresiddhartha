@@ -1,4 +1,4 @@
-import { azureClient, anthropicClient, config } from '../config/config.js';
+const { config, azureClient, anthropicClient } = require('../config/config.js');
 
 class ChatError extends Error {
     constructor(message, source) {
@@ -9,47 +9,45 @@ class ChatError extends Error {
 }
 
 const addThinkingDelay = async () => {
-    // Add a small random delay to simulate thinking
     const minDelay = 500;
     const maxDelay = 1500;
     const delay = Math.random() * (maxDelay - minDelay) + minDelay;
     await new Promise(resolve => setTimeout(resolve, delay));
 };
 
-export async function processMessage(message) {
-    // Add initial thinking delay
-    await addThinkingDelay();
-
-    // Try Azure OpenAI first
+async function processMessage(message) {
     try {
-        const completion = await azureClient.chat.completions.create({
-            messages: [
-                { role: "system", content: config.systemPrompt },
-                { role: "user", content: message }
-            ],
-            max_tokens: 1000
-        });
-        
-        if (completion.choices?.[0]?.message?.content) {
-            return {
-                success: true,
-                message: completion.choices[0].message.content,
-                source: 'azure'
-            };
+        // Try Azure OpenAI first
+        if (process.env.AZURE_OPENAI_API_KEY && process.env.AZURE_OPENAI_ENDPOINT) {
+            try {
+                const completion = await azureClient.chat.completions.create({
+                    messages: [
+                        { role: "system", content: process.env.SYSTEM_PROMPT || "You are a helpful AI assistant." },
+                        { role: "user", content: message }
+                    ],
+                    max_tokens: 1000
+                });
+                
+                if (completion.choices?.[0]?.message?.content) {
+                    return {
+                        success: true,
+                        message: completion.choices[0].message.content,
+                        source: 'azure'
+                    };
+                }
+                throw new ChatError('Invalid response format from Azure', 'azure');
+            } catch (azureError) {
+                console.log('Azure OpenAI Error:', azureError);
+                // Fall through to Claude
+            }
         }
-        throw new ChatError('Invalid response format from Azure', 'azure');
-    } catch (azureError) {
-        console.log('Azure OpenAI Error:', azureError);
-        
-        // Add delay before falling back to Claude
-        await addThinkingDelay();
         
         // Fall back to Claude
-        try {
+        if (process.env.CLAUDE_API_KEY) {
             const claudeResponse = await anthropicClient.messages.create({
-                model: config.anthropic.model,
+                model: process.env.CLAUDE_MODEL || 'claude-3-sonnet-20250219',
                 max_tokens: 1024,
-                system: config.systemPrompt,
+                system: process.env.SYSTEM_PROMPT || "You are a helpful AI assistant.",
                 messages: [{ role: "user", content: message }]
             });
 
@@ -61,12 +59,16 @@ export async function processMessage(message) {
                 };
             }
             throw new ChatError('Invalid response format from Claude', 'claude');
-        } catch (claudeError) {
-            console.error('Claude Error:', claudeError);
-            throw new ChatError(
-                'Both AI services failed to process the message',
-                'all'
-            );
         }
+
+        throw new ChatError('No valid AI service configuration found', 'config');
+    } catch (error) {
+        console.error('Chat service error:', error);
+        return {
+            success: false,
+            error: error.message || 'Failed to process message'
+        };
     }
 }
+
+module.exports = { processMessage };

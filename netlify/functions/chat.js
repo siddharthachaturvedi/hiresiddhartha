@@ -1,20 +1,15 @@
-import { config } from '../../src/config/config.js';
-import { processMessage } from '../../src/services/chatService.js';
+const { processMessage } = require('../../src/services/chatService.js');
 
-export const handler = async function(event, context) {
-    // Enable CORS
+const handler = async (event, context) => {
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Content-Type': 'application/json'
     };
 
-    // Handle preflight requests
     if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 204,
-            headers
-        };
+        return { statusCode: 204, headers };
     }
 
     if (event.httpMethod !== 'POST') {
@@ -42,10 +37,7 @@ export const handler = async function(event, context) {
         const result = await processMessage(message);
         return {
             statusCode: 200,
-            headers: {
-                ...headers,
-                'Content-Type': 'application/json'
-            },
+            headers,
             body: JSON.stringify(result)
         };
     } catch (error) {
@@ -60,3 +52,5 @@ export const handler = async function(event, context) {
         };
     }
 };
+
+module.exports = { handler };

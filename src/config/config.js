@@ -1,34 +1,32 @@
-import dotenv from 'dotenv';
-import OpenAI from 'openai';
-import Anthropic from '@anthropic-ai/sdk';
+require('dotenv').config();
 
-dotenv.config();
+const OpenAI = require('openai');
+const Anthropic = require('@anthropic-ai/sdk');
 
-export const config = {
+const config = {
     port: process.env.PORT || 3000,
     allowedOrigins: process.env.ALLOWED_ORIGINS ? 
         process.env.ALLOWED_ORIGINS.split(',') : 
-        ['http://localhost:3000', 'https://sidc.ai', 'https://www.sidc.ai'],
-    azure: {
-        endpoint: process.env.AZURE_OPENAI_ENDPOINT,
-        apiKey: process.env.AZURE_OPENAI_API_KEY,
-        deployment: process.env.GPT4O_DEPLOYMENT
-    },
-    anthropic: {
-        apiKey: process.env.CLAUDE_API_KEY,
-        model: process.env.CLAUDE_MODEL || 'claude-3-sonnet-20250219'
-    },
-    systemPrompt: process.env.SYSTEM_PROMPT || 'You are a helpful AI assistant.'
+        ['http://localhost:3000', 'https://sidc.ai', 'https://www.sidc.ai']
 };
 
-// Initialize API clients
-export const azureClient = new OpenAI({
-    apiKey: config.azure.apiKey,
-    baseURL: `${config.azure.endpoint}/openai/deployments/${config.azure.deployment}`,
-    defaultHeaders: { 'api-key': config.azure.apiKey },
-    defaultQuery: { 'api-version': '2024-02-15-preview' }
-});
+// Initialize API clients only if credentials are available
+let azureClient = null;
+let anthropicClient = null;
 
-export const anthropicClient = new Anthropic({
-    apiKey: config.anthropic.apiKey
-});
+if (process.env.AZURE_OPENAI_API_KEY && process.env.AZURE_OPENAI_ENDPOINT) {
+    azureClient = new OpenAI({
+        apiKey: process.env.AZURE_OPENAI_API_KEY,
+        baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.GPT4O_DEPLOYMENT || 'gpt-4'}`,
+        defaultHeaders: { 'api-key': process.env.AZURE_OPENAI_API_KEY },
+        defaultQuery: { 'api-version': '2024-02-15-preview' }
+    });
+}
+
+if (process.env.CLAUDE_API_KEY) {
+    anthropicClient = new Anthropic({
+        apiKey: process.env.CLAUDE_API_KEY
+    });
+}
+
+module.exports = { config, azureClient, anthropicClient };

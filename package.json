@@ -2,15 +2,15 @@
   "name": "hiresiddhartha",
   "version": "1.0.0",
   "main": "server/server.js",
-  "type": "module",
   "scripts": {
     "start": "node --no-deprecation server/server.js",
     "dev": "nodemon --no-deprecation server/server.js",
-    "build": "npm install",
+    "build": "npm ci --production && cp -r public/* .",
+    "postbuild": "cp index.html public/ && cp styles.css public/",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "18.x"
   },
   "keywords": [],
   "author": "",

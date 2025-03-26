@@ -6,6 +6,22 @@ yarn-error.log*
 package-lock.json
 yarn.lock
 
+# Netlify specific
+.netlify/
+.netlify/**/*
+# Local Netlify folder
+.netlify
+.netlify.state.json
+
+# Build output
+.next/
+public/dist/
+.nuxt/
+.serverless/
+.serverless_nextjs/
+.output/
+.generated/
+
 # Environment variables
 .env
 .env.*
@@ -13,6 +29,8 @@ yarn.lock
 .env.development
 .env.test
 .env.production
+.env.backup
+.env.save
 
 # IDE and editor files
 .idea/
@@ -21,6 +39,12 @@ yarn.lock
 *.swo
 *.swn
 *.bak
+.history/
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
 
 # OS generated files
 .DS_Store
@@ -35,6 +59,13 @@ Thumbs.db
 logs/
 *.log
 npm-debug.log*
+.debug/
+debug.log
+npm-debug.log.*
+yarn-debug.log.*
+yarn-error.log.*
+.pnpm-debug.log*
+lerna-debug.log*
 
 # Runtime data
 pids/
@@ -44,11 +75,28 @@ pids/
 
 # Testing
 coverage/
+.nyc_output/
+lib-cov/
+*.lcov
 
 # Production build
 dist/
 build/
 out/
+.next
+.nuxt
+.vuepress/dist
+.docusaurus
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
 
 # Misc
 .cache/
@@ -56,6 +104,34 @@ out/
 .tmp/
 tmp/
 temp/
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.backup
+*.tgz
+.node_repl_history
+.npm
+.eslintcache
+.stylelintcache
+bower_components
 
 # Azure Functions Local Settings
 local.settings.json
+
+# Local development
+.env*.local
+.vercel
+
+# Azure and cloud settings
+.azure/
+azurite-debug.log
+azure-functions-core-tools/
+.env.azure
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
