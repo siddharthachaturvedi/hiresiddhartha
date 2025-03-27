@@ -9,8 +9,12 @@ class ChatUI {
         this.isTyping = false;
         this.messageQueue = [];
         this.typingSpeed = {
-            min: 20,
-            max: 50
+            min: 15,  // Faster minimum typing speed (was 20)
+            max: 35   // Faster maximum typing speed (was 50)
+        };
+        this.typingIndicatorDelay = {
+            appear: 300,    // Quick appearance
+            disappear: 200  // Smooth disappearance
         };
 
         this.setupEventListeners();
@@ -39,16 +43,30 @@ class ChatUI {
         if (!this.typingIndicator) {
             this.typingIndicator = document.createElement('div');
             this.typingIndicator.className = 'typing-indicator';
+            this.typingIndicator.style.opacity = '0';
             this.typingIndicator.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
             this.chatWindow.appendChild(this.typingIndicator);
+            
+            // Smooth fade in
+            requestAnimationFrame(() => {
+                this.typingIndicator.style.transition = `opacity ${this.typingIndicatorDelay.appear}ms ease-in`;
+                this.typingIndicator.style.opacity = '1';
+            });
+            
             this.scrollToBottom();
         }
     }
 
     hideTypingIndicator() {
         if (this.typingIndicator) {
-            this.typingIndicator.remove();
-            this.typingIndicator = null;
+            // Smooth fade out
+            this.typingIndicator.style.transition = `opacity ${this.typingIndicatorDelay.disappear}ms ease-out`;
+            this.typingIndicator.style.opacity = '0';
+            
+            setTimeout(() => {
+                this.typingIndicator?.remove();
+                this.typingIndicator = null;
+            }, this.typingIndicatorDelay.disappear);
         }
     }
 
@@ -62,21 +80,26 @@ class ChatUI {
             return;
         }
 
-        // For assistant messages, show typing animation
+        // For assistant messages, show typing indicator
         this.showTypingIndicator();
+        await new Promise(resolve => setTimeout(resolve, this.typingIndicatorDelay.appear));
         
         const messageDiv = document.createElement('div');
         messageDiv.className = `message assistant-message`;
+        messageDiv.style.opacity = '0';
         this.chatWindow.insertBefore(messageDiv, this.typingIndicator);
 
         // Stream the message character by character
         let displayedText = '';
-        for (let i = 0; i < message.length; i++) {
-            displayedText += message[i];
+        const chunks = message.split(/(\s+)/);  // Split by whitespace to preserve spacing
+        
+        for (let chunk of chunks) {
+            displayedText += chunk;
             messageDiv.textContent = displayedText;
+            messageDiv.style.opacity = '1';
             this.scrollToBottom();
             
-            // Random delay between characters for natural typing feel
+            // Varied delay between chunks for natural rhythm
             const delay = Math.random() * (this.typingSpeed.max - this.typingSpeed.min) + this.typingSpeed.min;
             await new Promise(resolve => setTimeout(resolve, delay));
         }

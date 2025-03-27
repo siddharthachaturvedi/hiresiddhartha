@@ -1,4 +1,4 @@
-const { config, azureClient, anthropicClient } = require('../config/config.js');
+import { config, azureClient, anthropicClient } from '../config/config.js';
 
 class ChatError extends Error {
     constructor(message, source) {
@@ -15,16 +15,17 @@ const addThinkingDelay = async () => {
     await new Promise(resolve => setTimeout(resolve, delay));
 };
 
-async function processMessage(message) {
+export async function processMessage(message) {
     try {
         // Try Azure OpenAI first
         if (process.env.AZURE_OPENAI_API_KEY && process.env.AZURE_OPENAI_ENDPOINT) {
             try {
                 const completion = await azureClient.chat.completions.create({
                     messages: [
-                        { role: "system", content: process.env.SYSTEM_PROMPT || "You are a helpful AI assistant." },
+                        { role: "system", content: config.systemPrompt },
                         { role: "user", content: message }
                     ],
+                    model: process.env.GPT4O_DEPLOYMENT || config.defaultModels.gpt4,
                     max_tokens: 1000
                 });
                 
@@ -45,9 +46,9 @@ async function processMessage(message) {
         // Fall back to Claude
         if (process.env.CLAUDE_API_KEY) {
             const claudeResponse = await anthropicClient.messages.create({
-                model: process.env.CLAUDE_MODEL || 'claude-3-sonnet-20250219',
+                model: process.env.CLAUDE_MODEL || config.defaultModels.claude,
                 max_tokens: 1024,
-                system: process.env.SYSTEM_PROMPT || "You are a helpful AI assistant.",
+                system: config.systemPrompt,
                 messages: [{ role: "user", content: message }]
             });
 
@@ -70,5 +71,3 @@ async function processMessage(message) {
         };
     }
 }
-
-module.exports = { processMessage };

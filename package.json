@@ -1,6 +1,7 @@
 {
   "name": "hiresiddhartha",
   "version": "1.0.0",
+  "type": "module",
   "main": "server/server.js",
   "scripts": {
     "start": "node --no-deprecation server/server.js",
