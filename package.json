@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node --no-deprecation server/server.js",
     "dev": "nodemon --no-deprecation server/server.js",
-    "build": "npm ci --production && cp -r public/* .",
-    "postbuild": "cp index.html public/ && cp styles.css public/",
+    "prebuild": "npm ci --production",
+    "build": "node -e \"const fs=require('fs'); const path=require('path'); if(!fs.existsSync('public/js')){fs.mkdirSync('public/js',{recursive:true})}; fs.cpSync('public', '.', {recursive:true}); fs.cpSync('src', 'public', {recursive:true});\"",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "engines": {

@@ -1151,7 +1151,7 @@ footer {
 
 .user-message {
     background: var(--secondary);
-    color: var(--text-light);
+    color: var (--text-light);
     margin-left: auto;
     transform-origin: right;
 }
@@ -1217,8 +1217,27 @@ footer {
 
 /* Accessibility - Replace deprecated -ms-high-contrast */
 @media (forced-colors: active) {
-    /* Add forced color mode styles here */
-    .button, .nav-links a, .footer-link {
+    .button, 
+    .nav-links a, 
+    .footer-link,
+    .social-media a,
+    .contact-card,
+    .skills li {
         forced-color-adjust: none;
+    }
+
+    /* High contrast mode adjustments */
+    .hero {
+        background: Canvas;
+        color: CanvasText;
+    }
+
+    .nav-links a::after,
+    .footer-link::after {
+        background: currentColor;
+    }
+
+    .section-divider {
+        background: currentColor;
     }
 }

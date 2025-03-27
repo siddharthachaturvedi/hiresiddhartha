@@ -224,58 +224,9 @@
 
   <a href="#" class="scroll-top" aria-label="Scroll to Top">&uarr;</a>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-  <script type="module">
-    // Initialize AOS
-    AOS.init({
-      duration: 800,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
-    });
-
-    // Typewriter effect for hero section
-    const dynamicText = document.getElementById('dynamic-text');
-    const phrases = [
-      'AI Innovation Architect',
-      'Healthcare AI Pioneer',
-      'AI for Scientific Discovery Expert',
-      'Agentic AI Systems Builder',
-      'Research Product Leader'
-    ];
-    let phraseIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    let typingDelay = 200;
-
-    function typeEffect() {
-      const currentPhrase = phrases[phraseIndex];
-      
-      if (isDeleting) {
-        dynamicText.textContent = currentPhrase.substring(0, charIndex - 1);
-        charIndex--;
-      } else {
-        dynamicText.textContent = currentPhrase.substring(0, charIndex + 1);
-        charIndex++;
-      }
-
-      if (!isDeleting && charIndex === currentPhrase.length) {
-        isDeleting = true;
-        typingDelay = 3000; // Increased pause at end to 3 seconds
-      } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-        typingDelay = 80; // Faster typing speed (was 150)
-      }
-
-      setTimeout(typeEffect, isDeleting ? 50 : typingDelay); // Faster deletion speed (was 75)
-    }
-
-    // Start the typing effect
-    typeEffect();
-  </script>
-  <script type="module" src="/public/js/chat.js"></script>
-  <script type="module" src="/public/client.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script type="module" src="js/chat.js"></script>
+  <script type="module" src="client.js"></script>
 </body>
 
 </html>
